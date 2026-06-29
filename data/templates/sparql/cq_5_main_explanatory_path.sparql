@@ -1,0 +1,35 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdr: <http://example.org/semantic-defense-reasoner#>
+PREFIX d3f: <http://d3fend.mitre.org/ontologies/d3fend.owl#>
+
+SELECT DISTINCT
+  ?alert
+  ?technique
+  ?techniqueLabel
+  ?relation
+  ?artifact
+  ?artifactLabel
+WHERE {
+  ?alert a sdr:WazuhAlert .
+  ?alert sdr:indicatesTechnique ?technique .
+
+  VALUES ?relation {
+    d3f:produces
+    d3f:modifies
+    d3f:reads
+    d3f:writes
+    d3f:uses
+  }
+
+  ?technique ?relation ?artifact .
+
+  OPTIONAL {
+    ?technique rdfs:label ?techniqueLabel .
+  }
+
+  OPTIONAL {
+    ?artifact rdfs:label ?artifactLabel .
+  }
+}
+ORDER BY ?techniqueLabel ?relation ?artifactLabel

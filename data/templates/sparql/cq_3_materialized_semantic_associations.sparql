@@ -1,0 +1,17 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdr: <http://example.org/semantic-defense-reasoner#>
+
+SELECT ?alert ?property ?object ?objectLabel
+WHERE {
+  ?alert a sdr:WazuhAlert .
+  ?alert ?property ?object .
+
+  FILTER(!isLiteral(?object))
+  FILTER(?property != rdf:type)
+
+  OPTIONAL {
+    ?object rdfs:label ?objectLabel .
+  }
+}
+ORDER BY ?property ?object

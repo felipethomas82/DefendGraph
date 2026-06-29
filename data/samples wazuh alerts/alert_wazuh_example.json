@@ -1,0 +1,55 @@
+{
+  "predecoder": {
+    "hostname": "agent-linux-01",
+    "program_name": "sshd",
+    "timestamp": "May 19 22:32:34"
+  },
+  "agent": {
+    "ip": "10.20.0.3",
+    "name": "agent-linux-01",
+    "id": "001"
+  },
+  "manager": {
+    "name": "wazuh-01"
+  },
+  "data": {
+    "srcuser": "badguy",
+    "srcip": "10.20.0.2",
+    "srcport": "52678"
+  },
+  "rule": {
+    "level": 5,
+    "description": "sshd: Attempt to login using a non-existent user",
+    "groups": [
+      "syslog",
+      "sshd",
+      "authentication_failed",
+      "invalid_login"
+    ],
+    "firedtimes": 11,
+    "mitre": {
+      "technique": [
+        "Password Guessing"
+      ],
+      "id": [
+        "T1110.001"
+      ],
+      "tactic": [
+        "Credential Access"
+      ]
+    },
+    "id": "5710"
+  },
+  "decoder": {
+    "parent": "sshd",
+    "name": "sshd"
+  },
+  "full_log": "May 19 22:32:34 agent-linux-01 sshd[2321]: Invalid user badguy from 10.20.0.2 port 52678",
+  "input": {
+    "type": "log"
+  },
+  "@timestamp": "2026-05-19T22:32:35.001Z",
+  "location": "journald",
+  "id": "1779229955.76683",
+  "timestamp": "2026-05-19T22:32:35.001+0000"
+}

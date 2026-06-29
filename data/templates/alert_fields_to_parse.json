@@ -1,0 +1,44 @@
+{
+  "template_name": "alert_fields_to_parse",
+  "version": "1.0",
+  "description": "Field mapping template. Left side: field name displayed by the Expert System UI. Right side: corresponding field path in the original Wazuh alert JSON.",
+  "groups": {
+    "Alert Identification": {
+      "Alert ID": "id",
+      "Timestamp": "timestamp",
+      "Location": "location",
+      "Full Log": "full_log"
+    },
+    "Agent Information": {
+      "Agent ID": "agent.id",
+      "Agent Name": "agent.name",
+      "Agent IP": "agent.ip"
+    },
+    "Manager Information": {
+      "Manager Name": "manager.name"
+    },
+	"Decoder Information": {
+      "Decoder Name": "decoder.name",
+	  "Pre-decoder Name": "predecoder.program_name",
+	  "Host Name": "predecoder.hostname"
+    },
+    "Network Information": {
+      "Source IP": "data.srcip",
+      "Source Port": "data.srcport"
+    },
+    "User Information": {
+      "Source User": "data.srcuser"
+    },
+    "Rule Information": {
+      "Rule Description": "rule.description",
+      "Rule Level": "rule.level",
+	  "Rule Groups": "rule.groups",
+      "Rule Fired Times": "rule.firedtimes"
+    },
+    "MITRE ATT&CK Information": {
+      "MITRE IDs": "rule.mitre.id",
+      "MITRE Tactics": "rule.mitre.tactic",
+      "MITRE Techniques": "rule.mitre.technique"
+    }
+  }
+}

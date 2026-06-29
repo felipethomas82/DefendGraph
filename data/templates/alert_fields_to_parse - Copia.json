@@ -1,0 +1,62 @@
+{
+  "template_name": "alert_fields_to_parse",
+  "version": "1.0",
+  "description": "Field mapping template. Left side: field name displayed by the Expert System UI. Right side: corresponding field path in the original Wazuh alert JSON.",
+  "groups": {
+    "Alert Identification": {
+      "Alert ID": "id",
+      "Timestamp": "timestamp",
+      "Location": "location",
+      "Full Log": "full_log"
+    },
+    "Agent Information": {
+      "Agent ID": "agent.id",
+      "Agent Name": "agent.name",
+      "Agent IP": "agent.ip"
+    },
+    "Manager Information": {
+      "Manager Name": "manager.name"
+    },
+    "Rule Information": {
+      "Rule ID": "rule.id",
+      "Rule Level": "rule.level",
+      "Rule Description": "rule.description",
+      "Rule Fired Times": "rule.firedtimes",
+      "Rule Mail": "rule.mail",
+      "Rule Groups": "rule.groups"
+    },
+    "MITRE ATT&CK Information": {
+      "MITRE IDs": "rule.mitre.id",
+      "MITRE Tactics": "rule.mitre.tactic",
+      "MITRE Techniques": "rule.mitre.technique"
+    },
+    "Decoder Information": {
+      "Decoder Name": "decoder.name"
+    },
+    "Network Information": {
+      "Source IP": "data.srcip",
+      "Source Port": "data.srcport",
+      "Destination IP": "data.dstip",
+      "Destination Port": "data.dstport",
+      "Protocol": "data.protocol",
+      "Action": "data.action"
+    },
+    "User Information": {
+      "Source User": "data.srcuser",
+      "Destination User": "data.dstuser"
+    },
+    "System Event Information": {
+      "System Event ID": "data.system.eventID",
+      "System Channel": "data.system.channel",
+      "System Provider Name": "data.system.providerName",
+      "System Severity Value": "data.system.severityValue"
+    },
+    "Event Data Information": {
+      "Event Image": "data.eventdata.image",
+      "Event Target Object": "data.eventdata.targetObject",
+      "Event Process ID": "data.eventdata.processId",
+      "Event Rule Name": "data.eventdata.ruleName",
+      "Event User": "data.eventdata.user"
+    }
+  }
+}

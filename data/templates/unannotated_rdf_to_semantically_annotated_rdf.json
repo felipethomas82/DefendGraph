@@ -1,0 +1,24 @@
+{
+  "template_name": "unannotated_rdf_to_semantically_annotated_rdf",
+  "version": "1.0",
+  "description": "Semantic annotation template. Maps MITRE ID literal values from the unannotated alert RDF into ontology-oriented technique resources. This creates the semantic bridge used later to connect the alert ABox to the reference TBox.",
+  "namespaces": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "sdr": "http://example.org/semantic-defense-reasoner#",
+    "attack": "http://example.org/mitre/attack#"
+  },
+  "subject": {
+    "uri": "sdr:CurrentWazuhAlert"
+  },
+  "annotations": [
+    {
+      "name": "MITRE ID to ATT&CK Technique Resource",
+      "source_predicate": "sdr:hasMitreId",
+      "target_predicate": "sdr:indicatesTechnique",
+      "target_uri_template": "attack:{value}",
+      "target_type": "attack:Technique",
+      "sanitize_uri": true,
+      "allow_multiple": true
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "template_name": "parsed_fields_to_unannotated_rdf",
+  "version": "1.0",
+  "description": "RDF mapping template. Each entry maps one parsed alert field to one RDF predicate. This template creates an unannotated RDF representation of the alert, without semantic links to external ontologies.",
+  "namespaces": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "sdr": "http://example.org/semantic-defense-reasoner#"
+  },
+  "subject": {
+    "uri": "sdr:CurrentWazuhAlert",
+    "rdf_type": "sdr:WazuhAlert"
+  },
+  "fields": {
+    "Alert ID": {
+      "predicate": "sdr:hasAlertId",
+      "datatype": "xsd:string"
+    },
+    "Timestamp": {
+      "predicate": "sdr:hasTimestamp",
+      "datatype": "xsd:dateTime"
+    },
+    "Location": {
+      "predicate": "sdr:hasLocation",
+      "datatype": "xsd:string"
+    },
+    "Full Log": {
+      "predicate": "sdr:hasFullLog",
+      "datatype": "xsd:string"
+    },
+    "Agent ID": {
+      "predicate": "sdr:hasAgentId",
+      "datatype": "xsd:string"
+    },
+    "Agent Name": {
+      "predicate": "sdr:hasAgentName",
+      "datatype": "xsd:string"
+    },
+    "Agent IP": {
+      "predicate": "sdr:hasAgentIP",
+      "datatype": "xsd:string"
+    },
+    "Manager Name": {
+      "predicate": "sdr:hasManagerName",
+      "datatype": "xsd:string"
+    },
+    "Rule ID": {
+      "predicate": "sdr:hasRuleId",
+      "datatype": "xsd:string"
+    },
+    "Rule Level": {
+      "predicate": "sdr:hasRuleLevel",
+      "datatype": "xsd:integer"
+    },
+    "Rule Description": {
+      "predicate": "sdr:hasRuleDescription",
+      "datatype": "xsd:string"
+    },
+    "Rule Fired Times": {
+      "predicate": "sdr:hasRuleFiredTimes",
+      "datatype": "xsd:integer"
+    },
+    "Rule Mail": {
+      "predicate": "sdr:hasRuleMail",
+      "datatype": "xsd:boolean"
+    },
+    "Rule Groups": {
+      "predicate": "sdr:hasRuleGroup",
+      "datatype": "xsd:string",
+      "is_list": true
+    },
+    "MITRE IDs": {
+      "predicate": "sdr:hasMitreId",
+      "datatype": "xsd:string",
+      "is_list": true
+    },
+    "MITRE Tactics": {
+      "predicate": "sdr:hasMitreTactic",
+      "datatype": "xsd:string",
+      "is_list": true
+    },
+    "MITRE Techniques": {
+      "predicate": "sdr:hasMitreTechnique",
+      "datatype": "xsd:string",
+      "is_list": true
+    },
+    "Decoder Name": {
+      "predicate": "sdr:hasDecoderName",
+      "datatype": "xsd:string"
+    },
+    "Source IP": {
+      "predicate": "sdr:hasSourceIP",
+      "datatype": "xsd:string"
+    },
+    "Source Port": {
+      "predicate": "sdr:hasSourcePort",
+      "datatype": "xsd:string"
+    },
+    "Source User": {
+      "predicate": "sdr:hasSourceUser",
+      "datatype": "xsd:string"
+    },
+    "Destination IP": {
+      "predicate": "sdr:hasDestinationIP",
+      "datatype": "xsd:string"
+    },
+    "Destination Port": {
+      "predicate": "sdr:hasDestinationPort",
+      "datatype": "xsd:string"
+    },
+    "Destination User": {
+      "predicate": "sdr:hasDestinationUser",
+      "datatype": "xsd:string"
+    },
+    "Protocol": {
+      "predicate": "sdr:hasProtocol",
+      "datatype": "xsd:string"
+    },
+    "Action": {
+      "predicate": "sdr:hasAction",
+      "datatype": "xsd:string"
+    },
+    "System Event ID": {
+      "predicate": "sdr:hasSystemEventId",
+      "datatype": "xsd:string"
+    },
+    "System Channel": {
+      "predicate": "sdr:hasSystemChannel",
+      "datatype": "xsd:string"
+    },
+    "System Provider Name": {
+      "predicate": "sdr:hasSystemProviderName",
+      "datatype": "xsd:string"
+    },
+    "System Severity Value": {
+      "predicate": "sdr:hasSystemSeverityValue",
+      "datatype": "xsd:string"
+    },
+    "Event Image": {
+      "predicate": "sdr:hasEventImage",
+      "datatype": "xsd:string"
+    },
+    "Event Target Object": {
+      "predicate": "sdr:hasEventTargetObject",
+      "datatype": "xsd:string"
+    },
+    "Event Process ID": {
+      "predicate": "sdr:hasEventProcessId",
+      "datatype": "xsd:string"
+    },
+    "Event Rule Name": {
+      "predicate": "sdr:hasEventRuleName",
+      "datatype": "xsd:string"
+    },
+    "Event User": {
+      "predicate": "sdr:hasEventUser",
+      "datatype": "xsd:string"
+    }
+  }
+}

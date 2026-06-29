@@ -1,0 +1,117 @@
+{
+  "template_name": "modular_knowledge_graph_methods",
+  "version": "1.0",
+  "description": "Configuration template for selecting and configuring the method used to create the Step 2.4 knowledge graph. Only the method defined in selected_method is executed.",
+  "selected_method": "method_3_full_global_baseline",
+  "namespaces": {
+    "sdr": "http://example.org/semantic-defense-reasoner#",
+    "d3fend": "http://d3fend.mitre.org/ontologies/d3fend.owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "methods": {
+    "method_1_syntactic_graph_traversal": {
+	  "id": "01",	
+      "name": "Syntactic Graph Traversal",
+      "description": "Structural extraction method based on RDF graph traversal. It starts from the alert node and follows RDF connections up to a configurable depth.",
+      "config": {
+        "start_node": {
+          "value": "sdr:CurrentWazuhAlert",
+          "description": "Initial RDF resource used as the traversal root."
+        },
+        "max_depth": {
+          "value": 2,
+          "description": "Maximum number of traversal hops from the start node."
+        },
+        "include_outgoing_triples": {
+          "value": true,
+          "description": "Include triples where the selected node is the subject."
+        },
+        "include_incoming_triples": {
+          "value": true,
+          "description": "Include triples where the selected node is the object."
+        },
+        "include_node_closure": {
+          "value": true,
+          "description": "Include all direct triples associated with each selected resource."
+        },
+        "ignored_predicates": {
+          "value": [
+            "owl:imports"
+          ],
+          "description": "Predicates ignored during traversal and extraction."
+        }
+      }
+    },
+    "method_2_ontology_slicing": {
+	  "id": "02",
+      "name": "Ontology Slicing",
+      "description": "Ontology-oriented extraction method centered on the semantic signature of the alert.",
+      "config": {
+        "alert_node": {
+          "value": "sdr:CurrentWazuhAlert",
+          "description": "Alert resource used to identify the ontology signature."
+        },
+        "signature_predicate": {
+          "value": "sdr:indicatesTechnique",
+          "description": "Predicate used to collect D3FEND resources linked to the alert."
+        },
+        "include_alert_node": {
+          "value": true,
+          "description": "Include the alert resource and its direct triples in the module."
+        },
+        "include_signature_resources": {
+          "value": true,
+          "description": "Include D3FEND resources obtained from the alert signature."
+        },
+        "include_class_hierarchy": {
+          "value": true,
+          "description": "Include class hierarchy triples related to selected resources."
+        },
+        "include_outgoing_triples": {
+          "value": true,
+          "description": "Include triples where selected resources are subjects."
+        },
+        "include_incoming_triples": {
+          "value": true,
+          "description": "Include triples where selected resources are objects."
+        },
+        "include_node_closure": {
+          "value": true,
+          "description": "Include all direct triples associated with each selected resource."
+        },
+        "max_depth": {
+          "value": 2,
+          "description": "Maximum number of expansion hops from the signature resources."
+        },
+        "class_hierarchy_predicates": {
+          "value": [
+            "rdf:type",
+            "rdfs:subClassOf",
+            "owl:equivalentClass"
+          ],
+          "description": "Predicates treated as ontology hierarchy or class definition relations."
+        },
+        "ignored_predicates": {
+          "value": [
+            "owl:imports"
+          ],
+          "description": "Predicates ignored during slicing and extraction."
+        }
+      }
+    },
+    "method_3_full_global_baseline": {
+	  "id": "03",
+      "name": "Full Global Baseline",
+      "description": "Control-group method in which no modularization or filtering is performed.",
+      "config": {
+        "copy_full_graph": {
+          "value": true,
+          "description": "Copy the full knowledge graph unchanged."
+        }
+      }
+    }
+  }
+}

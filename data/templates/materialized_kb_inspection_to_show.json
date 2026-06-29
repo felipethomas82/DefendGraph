@@ -1,0 +1,147 @@
+{
+  "template_name": "materialized_kb_inspection_to_show",
+  "template_version": "1.0",
+  "description": "Defines the inspection sections used to summarize the materialized knowledge base generated after DL reasoning.",
+  "sections": {
+    "kb_statistics": {
+      "name": "Knowledge Base Statistics",
+      "enabled": false,
+      "description": "General quantitative overview of the materialized knowledge base.",
+      "fields": {
+        "classes_count": {
+          "enabled": false,
+          "help": "Counts the OWL classes available in the materialized knowledge base."
+        },
+        "individuals_count": {
+          "enabled": false,
+          "help": "Counts the named individuals instantiated in the materialized knowledge base."
+        },
+        "object_properties_count": {
+          "enabled": false,
+          "help": "Counts the object properties used to represent relationships between individuals."
+        },
+        "data_properties_count": {
+          "enabled": false,
+          "help": "Counts the data properties used to associate individuals with literal values."
+        },
+        "annotation_properties_count": {
+          "enabled": false,
+          "help": "Counts annotation properties used for labels, comments, descriptions, and metadata."
+        },
+        "triples_count": {
+          "enabled": false,
+          "help": "Counts the RDF triples in the materialized OWL file."
+        }
+      }
+    },
+    "materialization_delta": {
+      "name": "Materialization Delta",
+      "enabled": false,
+      "description": "Comparison between the consistent KB before reasoning and the materialized KB after reasoning.",
+      "compare_steps": {
+        "before_step_id": "3.1",
+        "after_step_id": "3.2"
+      },
+      "fields": {
+        "new_triples_count": {
+          "enabled": false,
+          "help": "Counts how many RDF triples were added after DL materialization."
+        },
+        "new_type_assertions": {
+          "enabled": false,
+          "help": "Lists new rdf:type assertions inferred for individuals."
+        },
+        "new_object_property_assertions": {
+          "enabled": false,
+          "help": "Lists new relationships inferred between individuals through object properties."
+        },
+        "new_data_property_assertions": {
+          "enabled": false,
+          "help": "Lists new literal values inferred through data properties."
+        }
+      }
+    },
+    "alert_individuals": {
+      "name": "Alert Individuals",
+      "enabled": false,
+      "description": "Individuals directly related to the Wazuh alert and their semantic assertions.",
+      "selection": {
+        "match_uri_contains": [
+          "alert",
+          "wazuh"
+        ],
+        "include_incoming_relations": {
+          "enabled": false,
+          "help": "Includes relations where another individual points to the alert individual."
+        },
+        "include_outgoing_relations": {
+          "enabled": false,
+          "help": "Includes relations where the alert individual points to another individual."
+        },
+        "include_data_properties": {
+          "enabled": false,
+          "help": "Includes literal values associated with the alert individual, such as IDs, IPs, users, timestamps, or descriptions."
+        },
+        "include_types": {
+          "enabled": false,
+          "help": "Includes OWL classes assigned to the alert individual, including inferred classes."
+        }
+      }
+    },
+    "logical_axioms": {
+      "name": "Logical Axioms Used by the Reasoner",
+      "enabled": false,
+      "description": "Summary of the ontology axioms that may have contributed to deductive inference.",
+      "fields": {
+        "subclass_axioms": {
+          "enabled": false,
+          "help": "Lists class hierarchy axioms where one class is declared as a subclass of another."
+        },
+        "equivalent_class_axioms": {
+          "enabled": false,
+          "help": "Lists class equivalence axioms that allow the reasoner to classify individuals or classes as semantically equivalent."
+        },
+        "disjoint_class_axioms": {
+          "enabled": false,
+          "help": "Lists disjointness axioms used to detect incompatible class memberships."
+        },
+        "inverse_properties": {
+          "enabled": false,
+          "help": "Lists object properties declared as inverses, allowing the reasoner to infer relations in the opposite direction."
+        },
+        "transitive_properties": {
+          "enabled": false,
+          "help": "Lists transitive properties, where chains of relations can imply additional indirect relations."
+        },
+        "symmetric_properties": {
+          "enabled": false,
+          "help": "Lists symmetric properties, where a relation from A to B implies the same relation from B to A."
+        },
+        "functional_properties": {
+          "enabled": false,
+          "help": "Lists functional properties, where an individual can have at most one value for that property."
+        },
+        "domain_axioms": {
+          "enabled": false,
+          "help": "Lists property domain axioms that allow the reasoner to infer the class of a subject using a property."
+        },
+        "range_axioms": {
+          "enabled": false,
+          "help": "Lists property range axioms that allow the reasoner to infer the class of an object using a property."
+        },
+        "existential_restrictions": {
+          "enabled": false,
+          "help": "Lists someValuesFrom restrictions, indicating that class membership requires the existence of at least one related value through a property."
+        },
+        "universal_restrictions": {
+          "enabled": false,
+          "help": "Lists only restrictions, indicating that all values of a property must belong to a given class."
+        },
+        "cardinality_restrictions": {
+          "enabled": false,
+          "help": "Lists min, max, or exact cardinality restrictions over properties."
+        }
+      }
+    }
+  }
+}

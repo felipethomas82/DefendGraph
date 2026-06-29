@@ -1,0 +1,8 @@
+owlready2
+owlrl
+pyshacl
+pytest
+rdflib
+streamlit
+streamlit-mermaid
+streamlit-cytoscape

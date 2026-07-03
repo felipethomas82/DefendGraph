@@ -17,18 +17,6 @@
     "Manager Information": {
       "Manager Name": "manager.name"
     },
-	"Decoder Information": {
-      "Decoder Name": "decoder.name",
-	  "Pre-decoder Name": "predecoder.program_name",
-	  "Host Name": "predecoder.hostname"
-    },
-    "Network Information": {
-      "Source IP": "data.srcip",
-      "Source Port": "data.srcport"
-    },
-    "User Information": {
-      "Source User": "data.srcuser"
-    },
     "Rule Information": {
       "Rule Description": "rule.description",
       "Rule Level": "rule.level",

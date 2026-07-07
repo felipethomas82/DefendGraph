@@ -1,0 +1,44 @@
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdr:  <http://example.org/semantic-defense-reasoner#>
+PREFIX d3f:  <http://d3fend.mitre.org/ontologies/d3fend.owl#>
+
+SELECT DISTINCT
+  ?dao
+  ?dao_label
+  ?artifact
+  ?artifact_label
+  ?sub_property
+  ?sub_property_label
+  ?defensive_technique
+  ?defensive_label
+  ?d3fend_id
+WHERE {
+  sdr:CurrentWazuhAlert sdr:hasRelevantD3FENDArtifact ?dao .
+
+  OPTIONAL {
+    ?dao rdfs:label ?dao_label .
+  }
+
+  ?artifact rdfs:subClassOf* ?dao .
+
+  OPTIONAL {
+    ?artifact rdfs:label ?artifact_label .
+  }
+
+  ?sub_property rdfs:subPropertyOf* d3f:detects .
+
+  ?defensive_technique ?sub_property ?artifact .
+  ?defensive_technique d3f:d3fend-id ?d3fend_id .
+
+  OPTIONAL {
+    ?sub_property rdfs:label ?sub_property_rdfs_label .
+  }
+
+  OPTIONAL {
+    ?defensive_technique rdfs:label ?defensive_label .
+  }
+
+  BIND(COALESCE(?sub_property_rdfs_label, REPLACE(STR(?sub_property), "^.*[#/]", "")) AS ?sub_property_label)
+}
+ORDER BY ?dao_label ?artifact_label ?sub_property_label ?d3fend_id

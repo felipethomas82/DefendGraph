@@ -4,10 +4,10 @@ from typing import Any
 import json
 import streamlit as st
 
-from rdflib import Graph, Literal, Namespace, RDF, URIRef
+from rdflib import Graph, Literal, Namespace, URIRef
 
 from src.state import get_step_state_filename_fullpath
-from src.rdflib.d3fend_annotation_lookup import load_ontology_graph, find_first_subject_by_literal_value
+from src.rdflib.d3fend_annotation_lookup import load_ontology_graph
 
 
 ANNOTATION_TEMPLATE_PATH = Path(
@@ -61,14 +61,170 @@ def bind_namespaces(graph: Graph, namespaces: dict[str, Namespace]) -> None:
 
 def expand_prefixed_name(value: str, namespaces: dict[str, Namespace]) -> URIRef:
     """
-    Expand a prefixed name such as 'sdr:hasMitreId' into a URIRef.
+    Expand a prefixed name such as 'sdr:hasDecoderName' into a URIRef.
     """
+    if ":" not in value:
+        raise ValueError(f"Expected a prefixed name, got: {value}")
+
     prefix, local_name = value.split(":", 1)
 
     if prefix not in namespaces:
         raise ValueError(f"Namespace prefix not found in template: {prefix}")
 
     return namespaces[prefix][local_name]
+
+
+def normalize_literal_value(value: Any, case_sensitive: bool = True) -> str:
+    """
+    Normalize a literal value for comparison.
+    """
+    normalized_value = str(value).strip()
+
+    if not case_sensitive:
+        return normalized_value.lower()
+
+    return normalized_value
+
+
+def values_are_equal(
+    left_value: Any,
+    right_value: Any,
+    case_sensitive: bool = True,
+) -> bool:
+    """
+    Compare two RDF literal values according to the configured case sensitivity.
+    """
+    return normalize_literal_value(left_value, case_sensitive) == normalize_literal_value(
+        right_value,
+        case_sensitive,
+    )
+
+
+def condition_matches(
+    graph: Graph,
+    subject_uri: URIRef,
+    condition: dict[str, Any],
+    namespaces: dict[str, Namespace],
+) -> bool:
+    """
+    Check whether an annotation condition matches the alert graph.
+    """
+    source_predicate = expand_prefixed_name(
+        condition["source_predicate"],
+        namespaces,
+    )
+
+    operator = condition.get("operator", "equals")
+    expected_value = condition["value"]
+    case_sensitive = condition.get("case_sensitive", True)
+
+    source_values = list(graph.objects(subject_uri, source_predicate))
+
+    if operator != "equals":
+        raise ValueError(f"Unsupported annotation condition operator: {operator}")
+
+    for source_value in source_values:
+        if is_empty_value(source_value):
+            continue
+
+        if values_are_equal(
+            left_value=source_value,
+            right_value=expected_value,
+            case_sensitive=case_sensitive,
+        ):
+            return True
+
+    return False
+
+
+def find_subjects_by_literal_label(
+    graph: Graph,
+    label_predicate: URIRef,
+    label_value: str,
+    case_sensitive: bool = True,
+) -> list[URIRef]:
+    """
+    Find ontology resources whose configured label predicate matches label_value.
+    """
+    matching_subjects: list[URIRef] = []
+
+    for subject, literal_value in graph.subject_objects(label_predicate):
+        if not isinstance(subject, URIRef):
+            continue
+
+        if is_empty_value(literal_value):
+            continue
+
+        if values_are_equal(
+            left_value=literal_value,
+            right_value=label_value,
+            case_sensitive=case_sensitive,
+        ):
+            matching_subjects.append(subject)
+
+    return matching_subjects
+
+
+def add_d3fend_resources_by_label(
+    alert_graph: Graph,
+    d3fend_graph: Graph,
+    subject_uri: URIRef,
+    target_predicate: URIRef,
+    lookup_config: dict[str, Any],
+    namespaces: dict[str, Namespace],
+) -> int:
+    """
+    Add semantic links from the alert to D3FEND resources found by rdfs:label.
+    """
+    lookup_predicate = expand_prefixed_name(
+        lookup_config.get("predicate", "rdfs:label"),
+        namespaces,
+    )
+
+    label_values = lookup_config.get("values", [])
+    case_sensitive = lookup_config.get("case_sensitive", True)
+    allow_multiple_matches = lookup_config.get("allow_multiple_matches_per_value", True)
+
+    added_triples_count = 0
+
+    for label_value in label_values:
+        if is_empty_value(label_value):
+            continue
+
+        d3fend_resource_uris = find_subjects_by_literal_label(
+            graph=d3fend_graph,
+            label_predicate=lookup_predicate,
+            label_value=str(label_value).strip(),
+            case_sensitive=case_sensitive,
+        )
+
+        if not d3fend_resource_uris:
+            st.warning(f"No D3FEND resource found with rdfs:label: {label_value}")
+            continue
+
+        if not allow_multiple_matches:
+            d3fend_resource_uris = d3fend_resource_uris[:1]
+
+        for d3fend_resource_uri in d3fend_resource_uris:
+            triple = (
+                subject_uri,
+                target_predicate,
+                d3fend_resource_uri,
+            )
+
+            if triple not in alert_graph:
+                alert_graph.add(triple)
+                added_triples_count += 1
+
+            alert_graph.add(
+                (
+                    d3fend_resource_uri,
+                    namespaces["sdr"]["hasOriginalD3FENDLabel"],
+                    Literal(str(label_value).strip()),
+                )
+            )
+
+    return added_triples_count
 
 
 def create_annotated_rdf() -> bool:
@@ -79,9 +235,9 @@ def create_annotated_rdf() -> bool:
         - Step 1.2: unannotated alert RDF
         - Step 2.1: D3FEND OWL
 
-    It searches the D3FEND ontology for resources annotated with the same
-    MITRE ID found in the alert RDF, then links the alert to the real
-    ontology resource.
+    It checks configured alert predicates, such as sdr:hasDecoderName,
+    and, when a condition matches, links the alert to D3FEND resources found
+    by matching configured labels against rdfs:label in the D3FEND ontology.
 
     Output:
         - Step 2.2: semantically annotated RDF/OWL
@@ -113,55 +269,48 @@ def create_annotated_rdf() -> bool:
         bind_namespaces(alert_graph, namespaces)
 
         d3fend_graph = load_ontology_graph(input_d3fend_file_path)
+        bind_namespaces(d3fend_graph, namespaces)
 
         subject_uri = expand_prefixed_name(
             annotation_template["subject"]["uri"],
             namespaces,
         )
 
+        total_added_triples = 0
+
         for annotation in annotation_template.get("annotations", []):
-            source_predicate = expand_prefixed_name(
-                annotation["source_predicate"],
-                namespaces,
-            )
+            condition = annotation.get("condition")
+
+            if condition is None:
+                st.warning(
+                    f"Skipping annotation without condition: {annotation.get('name')}"
+                )
+                continue
+
+            if not condition_matches(
+                graph=alert_graph,
+                subject_uri=subject_uri,
+                condition=condition,
+                namespaces=namespaces,
+            ):
+                continue
 
             target_predicate = expand_prefixed_name(
                 annotation["target_predicate"],
                 namespaces,
             )
 
-            source_values = list(alert_graph.objects(subject_uri, source_predicate))
+            total_added_triples += add_d3fend_resources_by_label(
+                alert_graph=alert_graph,
+                d3fend_graph=d3fend_graph,
+                subject_uri=subject_uri,
+                target_predicate=target_predicate,
+                lookup_config=annotation.get("lookup", {}),
+                namespaces=namespaces,
+            )
 
-            for source_value in source_values:
-                if is_empty_value(source_value):
-                    continue
-
-                mitre_id = str(source_value).strip()
-
-                d3fend_resource_uri = find_first_subject_by_literal_value(
-                    graph=d3fend_graph,
-                    literal_value=mitre_id,
-                )
-
-                if d3fend_resource_uri is None:
-                    st.warning(f"No D3FEND resource found for MITRE ID: {mitre_id}")
-                    continue
-
-                alert_graph.add(
-                    (
-                        subject_uri,
-                        target_predicate,
-                        d3fend_resource_uri,
-                    )
-                )
-
-                alert_graph.add(
-                    (
-                        d3fend_resource_uri,
-                        namespaces["sdr"]["hasOriginalMitreId"],
-                        Literal(mitre_id),
-                    )
-                )
+        if total_added_triples == 0:
+            st.warning("No semantic annotation triple was added to the alert RDF.")
 
         output_file_path.parent.mkdir(parents=True, exist_ok=True)
 

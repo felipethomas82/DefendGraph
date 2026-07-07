@@ -3,6 +3,10 @@ Tab 4: Explanation (Stage 4)
 """
 import streamlit as st
 from streamlit_mermaid import st_mermaid
+import json
+import html
+import hashlib
+import streamlit.components.v1 as components
 from pathlib import Path
 from pipeline_config import PIPELINE
 from src.ui.tabs.tab_helper import render_tab_checklist
@@ -146,17 +150,25 @@ def render_tab_explanation():
     if st.session_state.get("path_graph_created", False):
         st.info("Path graph visualization is currently loaded.")
 
-    #Render mmd mermaid file
+    # Render mmd mermaid file
     if st.session_state.get("path_graph_created", False):
         mmd_path = get_step_state_filename_fullpath(step)
-        with open(mmd_path, "r") as f:
+
+        with open(mmd_path, "r", encoding="utf-8") as f:
             mermaid_code = f.read()
-            st_mermaid(mermaid_code)
+
+        render_mermaid_pan_zoom(
+            mermaid_code=mermaid_code,
+            container_height=650,
+            component_height=680,
+            initial_zoom=3,
+        )
 
     # Clear button
-    if st.button("Clear path graph visualization",
+    if st.button(
+        "Clear path graph visualization",
         disabled=not st.session_state.get("path_graph_created", False),
-        width="stretch"
+        width="stretch",
     ):
         clear_path_graph_created(get_step_state_filename_fullpath(step))
         st.rerun()
@@ -190,4 +202,172 @@ def clear_path_graph_created(file_path: str | Path) -> None:
     delete_file_if_exists(file_path)
 
     st.session_state.path_graph_created = False
+
+def render_mermaid_pan_zoom(
+    mermaid_code: str,
+    container_height: int = 650,
+    component_height: int = 680,
+    initial_zoom: float = 1.25,
+) -> None:
+    """
+    Render a Mermaid graph with pan and zoom support.
+    """
+
+    mermaid_code_json = json.dumps(mermaid_code)
+    component_id = hashlib.md5(mermaid_code.encode("utf-8")).hexdigest()[:10]
+
+    graph_container_id = f"graph-container-{component_id}"
+    graph_target_id = f"graph-target-{component_id}"
+    graph_render_id = f"reasoning-path-graph-{component_id}"
+
+    zoom_in_button_id = f"zoom-in-{component_id}"
+    zoom_out_button_id = f"zoom-out-{component_id}"
+    reset_button_id = f"reset-zoom-{component_id}"
+    fit_button_id = f"fit-graph-{component_id}"
+
+    graph_area_height = container_height - 50
+
+    components.html(
+        f"""
+        <div style="
+            width: 100%;
+            height: {container_height}px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        ">
+            <div style="
+                height: 42px;
+                padding: 6px 10px;
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                border-bottom: 1px solid #eee;
+                background-color: #fafafa;
+                flex-shrink: 0;
+            ">
+                <button id="{zoom_in_button_id}">+</button>
+                <button id="{zoom_out_button_id}">-</button>
+                <button id="{reset_button_id}">Reset</button>
+                <button id="{fit_button_id}">Fit</button>
+
+                <span style="font-size: 13px; color: #555;">
+                    Use o scroll para zoom e arraste o grafo para navegar.
+                </span>
+            </div>
+
+            <div id="{graph_container_id}" style="
+                width: 100%;
+                height: {graph_area_height}px;
+                overflow: hidden;
+                position: relative;
+            ">
+                <div id="{graph_target_id}" style="
+                    width: 100%;
+                    height: 100%;
+                "></div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
+
+        <script type="module">
+            import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+            const mermaidCode = {mermaid_code_json};
+
+            mermaid.initialize({{
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                flowchart: {{
+                    useMaxWidth: false,
+                    htmlLabels: true,
+                    nodeSpacing: 70,
+                    rankSpacing: 100
+                }}
+            }});
+
+            let panZoomInstance = null;
+
+            async function renderGraph() {{
+                const target = document.getElementById("{graph_target_id}");
+
+                const rendered = await mermaid.render(
+                    "{graph_render_id}",
+                    mermaidCode
+                );
+
+                target.innerHTML = rendered.svg;
+
+                const svg = target.querySelector("svg");
+
+                if (!svg) {{
+                    return;
+                }}
+
+                svg.removeAttribute("width");
+                svg.removeAttribute("height");
+
+                svg.style.width = "100%";
+                svg.style.height = "100%";
+                svg.style.maxWidth = "none";
+                svg.style.display = "block";
+
+                panZoomInstance = svgPanZoom(svg, {{
+                    zoomEnabled: true,
+                    panEnabled: true,
+                    controlIconsEnabled: false,
+                    fit: true,
+                    center: true,
+                    contain: false,
+                    minZoom: 0.05,
+                    maxZoom: 20,
+                    zoomScaleSensitivity: 0.35
+                }});
+
+                setTimeout(() => {{
+                    panZoomInstance.resize();
+                    panZoomInstance.fit();
+                    panZoomInstance.center();
+                    panZoomInstance.zoomBy({initial_zoom});
+                }}, 100);
+            }}
+
+            document.getElementById("{zoom_in_button_id}").onclick = function() {{
+                if (panZoomInstance) {{
+                    panZoomInstance.zoomIn();
+                }}
+            }};
+
+            document.getElementById("{zoom_out_button_id}").onclick = function() {{
+                if (panZoomInstance) {{
+                    panZoomInstance.zoomOut();
+                }}
+            }};
+
+            document.getElementById("{reset_button_id}").onclick = function() {{
+                if (panZoomInstance) {{
+                    panZoomInstance.resetZoom();
+                    panZoomInstance.center();
+                }}
+            }};
+
+            document.getElementById("{fit_button_id}").onclick = function() {{
+                if (panZoomInstance) {{
+                    panZoomInstance.resize();
+                    panZoomInstance.fit();
+                    panZoomInstance.center();
+                }}
+            }};
+
+            renderGraph();
+        </script>
+        """,
+        height=component_height,
+        scrolling=False,
+    )
 

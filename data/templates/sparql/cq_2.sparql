@@ -1,0 +1,12 @@
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdr:  <http://example.org/semantic-defense-reasoner#>
+PREFIX d3f:  <http://d3fend.mitre.org/ontologies/d3fend.owl#>
+
+SELECT ?artifact ?property ?definition
+WHERE {
+  sdr:CurrentWazuhAlert sdr:hasRelevantD3FENDArtifact ?artifact .
+  ?artifact d3f:definition ?definition .
+  BIND(d3f:definition AS ?property)
+}
+ORDER BY ?artifact

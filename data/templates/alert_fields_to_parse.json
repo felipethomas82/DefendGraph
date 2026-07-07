@@ -17,6 +17,12 @@
     "Manager Information": {
       "Manager Name": "manager.name"
     },
+	"Decoder Information": {
+      "Decoder Name": "decoder.name"
+    },
+    "Network Information": {
+      "Source IP": "data.srcip"
+    },
     "Rule Information": {
       "Rule Description": "rule.description",
       "Rule Level": "rule.level",

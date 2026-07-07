@@ -1,24 +1,57 @@
 {
   "template_name": "unannotated_rdf_to_semantically_annotated_rdf",
-  "version": "1.0",
-  "description": "Semantic annotation template. Maps MITRE ID literal values from the unannotated alert RDF into ontology-oriented technique resources. This creates the semantic bridge used later to connect the alert ABox to the reference TBox.",
+  "version": "2.0",
+  "description": "Semantic annotation template. Maps alert decoder values to D3FEND resources by matching configured labels against rdfs:label in the D3FEND ontology.",
   "namespaces": {
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "sdr": "http://example.org/semantic-defense-reasoner#",
-    "attack": "http://example.org/mitre/attack#"
+    "d3f": "http://d3fend.mitre.org/ontologies/d3fend.owl#"
   },
   "subject": {
     "uri": "sdr:CurrentWazuhAlert"
   },
   "annotations": [
     {
-      "name": "MITRE ID to ATT&CK Technique Resource",
-      "source_predicate": "sdr:hasMitreId",
-      "target_predicate": "sdr:indicatesTechnique",
-      "target_uri_template": "attack:{value}",
-      "target_type": "attack:Technique",
-      "sanitize_uri": true,
-      "allow_multiple": true
-    }
+      "name": "sshd decoder to D3FEND artifacts",
+      "condition": {
+        "source_predicate": "sdr:hasDecoderName",
+        "operator": "equals",
+        "value": "sshd",
+        "case_sensitive": false
+      },
+      "target_predicate": "sdr:hasRelevantD3FENDArtifact",
+      "lookup": {
+        "predicate": "rdfs:label",
+        "values": [
+          "Credential",
+          "User Account",
+          "Log",
+          "Password"
+        ],
+        "case_sensitive": true,
+        "allow_multiple_matches_per_value": true
+      }
+    },
+    {
+      "name": "web-accesslog decoder to D3FEND artifacts",
+      "condition": {
+        "source_predicate": "sdr:hasDecoderName",
+        "operator": "equals",
+        "value": "web-accesslog",
+        "case_sensitive": false
+      },
+      "target_predicate": "sdr:hasRelevantD3FENDArtifact",
+      "lookup": {
+        "predicate": "rdfs:label",
+        "values": [
+          "Embedded Database Application",
+          "Database Query",
+          "Database"
+        ],
+        "case_sensitive": true,
+        "allow_multiple_matches_per_value": true
+      }
+    }	
   ]
 }

@@ -1,0 +1,46 @@
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdr:  <http://example.org/semantic-defense-reasoner#>
+PREFIX d3f:  <http://d3fend.mitre.org/ontologies/d3fend.owl#>
+
+SELECT DISTINCT
+  ?dao
+  ?dao_label
+  ?artifact
+  ?artifact_label
+  ?attack_property
+  ?attack_property_label
+  ?attack_technique
+  ?attack_label
+  ?attack_id
+WHERE {
+  sdr:CurrentWazuhAlert sdr:hasRelevantD3FENDArtifact ?dao .
+
+  OPTIONAL {
+    ?dao rdfs:label ?dao_label .
+  }
+
+  ?artifact rdfs:subClassOf* ?dao .
+
+  OPTIONAL {
+    ?artifact rdfs:label ?artifact_label .
+  }
+
+  ?raw_attack_technique ?attack_property ?artifact .
+  ?raw_attack_technique rdf:type d3f:OffensiveTechnique .
+
+  BIND(URI(REPLACE(STR(?raw_attack_technique), "\\.[0-9]+$", "")) AS ?attack_technique)
+
+  FILTER(REGEX(STR(?attack_technique), "#T[0-9]+"))
+
+  OPTIONAL {
+    ?attack_technique rdfs:label ?attack_label .
+  }
+
+  OPTIONAL {
+    ?attack_technique d3f:attack-id ?attack_id .
+  }
+
+  BIND(REPLACE(STR(?attack_property), "^.*[#/]", "") AS ?attack_property_label)
+}
+ORDER BY ?dao_label ?artifact_label ?attack_property_label ?attack_label

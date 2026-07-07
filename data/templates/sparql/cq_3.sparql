@@ -1,0 +1,26 @@
+PREFIX d3fend: <http://d3fend.mitre.org/ontologies/d3fend.owl#>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdr:  <http://example.org/semantic-defense-reasoner#>
+PREFIX d3f:  <http://d3fend.mitre.org/ontologies/d3fend.owl#>
+
+SELECT DISTINCT ?main_technique ?label ?definition
+WHERE {
+  #DAOs
+  sdr:CurrentWazuhAlert sdr:hasRelevantD3FENDArtifact ?artifact .
+  
+  #Offensive technice
+  ?offensive_technique ?propertie ?artifact .
+  ?offensive_technique rdf:type d3f:OffensiveTechnique .
+  
+  # REGEX
+  BIND(URI(REPLACE(STR(?offensive_technique), "\\.[0-9]+$", "")) AS ?main_technique)
+  FILTER(REGEX(STR(?main_technique), "#T[0-9]+"))
+  
+  ?main_technique rdfs:label ?label .
+    
+  OPTIONAL {
+    ?main_technique d3f:definition ?definition .
+  }    
+}
+ORDER BY ?main_technique

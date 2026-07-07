@@ -39,134 +39,92 @@
           "label": "Source User"
         },
         {
-          "source": "hasRuleDescription",
-          "label": "Rule Description"
-        },
-        {
-          "source": "hasRuleLevel",
-          "label": "Rule Level"
-        },
-        {
-          "source": "hasRuleFiredTimes",
-          "label": "Rule Fired Times"
-        }
-      ]
-    },
-    "observed_evidence": {
-      "title": "Observed Evidence",
-      "enabled": true,
-      "source_cq": "CQ1",
-      "description": "Lists selected observed evidence directly extracted from the Wazuh alert.",
-      "render_as": "summary",
-      "fields": [
-        {
-          "source": "hasFullLog",
-          "label": "Full Log"
-        },
-        {
           "source": "hasDecoderName",
-          "label": "Decoder"
+          "label": "Decoder Name"
         },
         {
-          "source": "hasLocation",
-          "label": "Log Source"
-        },
-        {
-          "source": "hasRuleGroup",
-          "label": "Rule Group"
-        }
-      ]
-    },
-    "attack_technique_assessment": {
-      "title": "ATT&CK Technique Assessment",
-      "enabled": true,
-      "source_cq": "CQ2",
-      "description": "Lists the ATT&CK techniques associated with the alert.",
-      "render_as": "table",
-      "fields": [
-        {
-          "source": "attackId",
-          "label": "ATT&CK ID"
-        },
-        {
-          "source": "techniqueLabel",
-          "label": "Technique"
-        },
-        {
-          "source": "technique",
-          "label": "Technique URI"
+          "source": "hasMitreId",
+          "label": "MITRE ATT&CK ID (by Wazuh)"
         }
       ]
     },
     "semantic_associations": {
-      "title": "Materialized Semantic Associations",
+      "title": "MITRE D3FEND Digital Artifact Objects Related to Wazuh Alert",
       "enabled": true,
-      "source_cq": "CQ3",
-      "description": "Shows direct semantic associations materialized between the alert and enriched semantic entities.",
+      "source_cq": "CQ2",
+      "description": "Direct semantic associations materialized between the alert and enriched semantic entities.\r\nLists the MITRE D3FEND Digital Artifact Objects (DAOs) associated with the Wazuh alert.",
       "render_as": "table",
       "fields": [
         {
-          "source": "property",
-          "label": "Relation"
+          "source": "artifact",
+          "label": "Digital Artifact Object"
         },
         {
-          "source": "objectLabel",
-          "label": "Object Label"
-        },
-        {
-          "source": "object",
-          "label": "Object URI"
+          "source": "definition",
+          "label": "Definition"
         }
       ]
     },
-    "candidate_defensive_artifacts": {
-      "title": "Candidate Defensive Artifacts",
+    "attack_tactics": {
+      "title": "ATT&CK Techniques Related to MITRE D3FEND Digital Artifact Objects",
+      "enabled": true,
+      "source_cq": "CQ3",
+      "description": "Lists the ATT&CK techniques associated with MITRE D3FEND Digital Artifact Objects.",
+      "render_as": "table",
+      "fields": [ 
+        {
+          "source": "main_technique",
+          "label": "ATT&CK ID"
+        },
+	    {
+          "source": "label",
+          "label": "Name"
+        },
+        {
+          "source": "definition",
+          "label": "Definition"
+        }
+      ]
+    },
+    "d3fend_countermeasure_detects": {
+      "title": "MITRE D3FEND Countermeasures Related to Detection",
       "enabled": true,
       "source_cq": "CQ4",
-      "description": "Groups candidate D3FEND artifacts and security-relevant entities by associated ATT&CK technique.",
-      "render_as": "grouped_list",
-      "group_by": "techniqueLabel",
+      "description": "Countermeasures based on the Detects property and its subproperties associated with the alert's Digital Artifact Objects.",
+      "render_as": "table",
       "fields": [
         {
-          "source": "defensiveArtifactLabel",
-          "label": "Artifact",
-          "fallback": "defensiveArtifact"
+          "source": "d3fend_id",
+          "label": "D3FEND ID"
+        },
+        {
+          "source": "label",
+          "label": "Name"
+        },
+        {
+          "source": "definition",
+          "label": "Definition"
         }
       ]
     },
-    "main_explanatory_paths": {
-      "title": "Main Explanatory Paths",
+    "d3fend_countermeasure_hardens": {
+      "title": "MITRE D3FEND Countermeasures Related to Hardening",
       "enabled": true,
       "source_cq": "CQ5",
-      "description": "Shows compact semantic paths from ATT&CK techniques to related D3FEND artifacts.",
-      "render_as": "path_list",
+      "description": "Countermeasures based on the Hardens property and its subproperties associated with the alert's Digital Artifact Objects.",
+      "render_as": "table",
       "fields": [
         {
-          "source": "techniqueLabel",
-          "label": "Technique"
+          "source": "d3fend_id",
+          "label": "D3FEND ID"
         },
         {
-          "source": "relation",
-          "label": "Relation"
+          "source": "label",
+          "label": "Name"
         },
         {
-          "source": "artifactLabel",
-          "label": "Artifact",
-          "fallback": "artifact"
-        }
-      ]
-    },
-    "defensive_focus": {
-      "title": "Recommended Defensive Focus",
-      "enabled": true,
-      "source_cq": "CQ5",
-      "description": "Derives investigation focus from artifacts appearing in the main explanatory paths.",
-      "render_as": "focus_list",
-      "fields": [
-        {
-          "source": "artifactLabel",
-          "label": "Focus Artifact",
-          "fallback": "artifact"
+          "source": "definition",
+          "label": "Definition"
         }
       ]
     }

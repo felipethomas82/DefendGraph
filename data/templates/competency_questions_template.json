@@ -4,44 +4,68 @@
   "description": "Template-driven competency questions for resolving explanatory SPARQL queries over the materialized knowledge base.",
   "questions": {
     "CQ1": {
-      "name": "Observed Alert Evidence",
+      "name": "Alert Summary",
       "enabled": true,
       "question": "What factual evidence was observed in the Wazuh alert?",
       "explanation_role": "Identifies the direct factual evidence extracted from the alert before semantic interpretation.",
       "expected_result_role": "Alert identifiers, timestamps, users, hosts, network fields, rule metadata, and raw observable fields.",
-      "sparql_file": "data/templates/sparql/cq_1_observed_alert_evidence.sparql"
+      "sparql_file": "data/templates/sparql/cq_1.sparql"
     },
     "CQ2": {
-      "name": "MITRE Technique Association",
+      "name": "MITRE D3FEND Digital Artifact Objects Related to Wazuh Alert",
       "enabled": true,
-      "question": "Which MITRE ATT&CK technique is associated with the alert?",
-      "explanation_role": "Connects the observed alert to the adversarial technique represented in the knowledge base.",
-      "expected_result_role": "Technique identifiers, labels, and direct alert-to-technique associations.",
-      "sparql_file": "data/templates/sparql/cq_2_mitre_technique_association.sparql"
+      "question": "Which MITRE D3FEND Digital Artifact Objects are related to Wazuh Alert?",
+      "explanation_role": "",
+      "expected_result_role": "",
+      "sparql_file": "data/templates/sparql/cq_2.sparql"
     },
     "CQ3": {
-      "name": "Materialized Semantic Associations",
+      "name": "MITRE ATT&CK Techniques Related to MITRE D3FEND Digital Artifact Objects",
       "enabled": true,
-      "question": "Which semantic associations involving the alert were materialized in the knowledge base?",
-      "explanation_role": "Retrieves semantic relations directly connected to the alert after materialization.",
-      "expected_result_role": "Object properties connecting the alert to enriched semantic entities, excluding basic RDF typing.",
-      "sparql_file": "data/templates/sparql/cq_3_materialized_semantic_associations.sparql"
+      "question": "Which MITRE ATT&CK techniques are related to MITRE D3FEND Digital Artifact Objects?",
+      "explanation_role": "",
+      "expected_result_role": "",
+      "sparql_file": "data/templates/sparql/cq_3.sparql"
     },
     "CQ4": {
-      "name": "Candidate Defensive Artifacts",
+      "name": "MITRE D3FEND Countermeasures Related to Detection",
       "enabled": true,
-      "question": "Which D3FEND artifacts are semantically associated with the ATT&CK techniques identified for this alert?",
-      "explanation_role": "Identifies D3FEND artifacts, defensive resources, and security-relevant entities associated with the ATT&CK techniques linked to the alert.",
-      "expected_result_role": "Candidate D3FEND artifacts and related entities that may support defensive analysis and recommendation generation.",
-      "sparql_file": "data/templates/sparql/cq_4_candidate_defensive_artifacts.sparql"
+      "question": "Which D3FEND countermeasures (Detects) are semantically associated with MITRE D3FEND Digital Artifact Objects related to Wazuh Alert?",
+      "explanation_role": "",
+      "expected_result_role": "",
+      "sparql_file": "data/templates/sparql/cq_4.sparql"
     },
     "CQ5": {
-      "name": "Main Explanatory Path",
+      "name": "MITRE D3FEND Countermeasures Related to Hardening",
       "enabled": true,
-      "question": "What is the main semantic path connecting the alert-associated ATT&CK techniques to related D3FEND artifacts?",
-      "explanation_role": "Builds a compact and traceable semantic path linking the alert, the associated ATT&CK techniques, and the D3FEND artifacts connected through meaningful relations.",
-      "expected_result_role": "Technique-to-artifact semantic paths suitable for advisory synthesis and Mermaid reasoning-path visualization.",
-      "sparql_file": "data/templates/sparql/cq_5_main_explanatory_path.sparql"
-    }
+      "question": "Which D3FEND countermeasures (Hardens) are semantically associated with MITRE D3FEND Digital Artifact Objects related to Wazuh Alert?",
+      "explanation_role": "",
+      "expected_result_role": "",
+      "sparql_file": "data/templates/sparql/cq_5.sparql"
+    },
+    "CQ6": {
+      "name": "DAO to MITRE ATT&CK Reasoning Path",
+      "enabled": true,
+      "question": "Which MITRE ATT&CK offensive techniques are semantically related to each D3FEND Digital Artifact Object associated with the current Wazuh alert?",
+      "explanation_role": "Builds a DAO-centered path from alert-related D3FEND Digital Artifact Objects to related MITRE ATT&CK offensive techniques.",
+      "expected_result_role": "",
+      "sparql_file": "data/templates/sparql/cq_6.sparql"    
+	},
+    "CQ7": {
+      "name": "DAO to D3FEND Detect Reasoning Path",
+      "enabled": true,
+      "question": "Which D3FEND Detect techniques and detects-subproperties are associated with each alert-related D3FEND Digital Artifact Object?",
+      "explanation_role": "",
+      "expected_result_role": "",
+      "sparql_file": "data/templates/sparql/cq_7.sparql" 
+    },
+    "CQ8": {
+      "name": "DAO to D3FEND Harden Reasoning Path",
+	  "enabled": true,
+      "question": "Which D3FEND Harden techniques and hardens-subproperties are associated with each alert-related D3FEND Digital Artifact Object?",
+      "explanation_role": "",
+      "expected_result_role": "",
+      "sparql_file": "data/templates/sparql/cq_8.sparql"
+	}	
   }
 }

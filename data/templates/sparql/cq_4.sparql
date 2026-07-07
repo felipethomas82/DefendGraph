@@ -1,0 +1,29 @@
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdr:  <http://example.org/semantic-defense-reasoner#>
+PREFIX d3f:  <http://d3fend.mitre.org/ontologies/d3fend.owl#>
+
+SELECT DISTINCT ?d3fend_id ?label ?definition
+WHERE {
+  #Find Digital Artifact Object in CurrentWazuhAlert
+  sdr:CurrentWazuhAlert sdr:hasRelevantD3FENDArtifact ?base_class .
+  ?artifact rdfs:subClassOf* ?base_class . 
+  
+  # Maps all subproperties of a given property (used for TACTICs: DETECT / HARDEN)
+  ?sub_property rdfs:subPropertyOf* d3f:detects .
+    
+  # Intersects the mapped tactics and artifacts to find valid relationships
+  ?countermeasure ?sub_property ?artifact .
+
+  #Desired values/names related to ?countermeasure  
+  ?countermeasure d3f:d3fend-id ?d3fend_id .
+  
+  OPTIONAL {
+    ?countermeasure rdfs:label ?label .
+  }
+  
+  OPTIONAL {
+    ?countermeasure d3f:definition ?definition .
+  }
+}
+ORDER BY ?d3fend_id

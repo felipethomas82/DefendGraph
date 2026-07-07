@@ -134,10 +134,25 @@ def check_DL_consistency() -> bool:
         st.warning("Step 3.1 output file was not created.")
         return False
 
-    #except OwlReadyJavaError as error:
-    #    st.error("Pellet returned a Java error during consistency checking.")
-    #    st.exception(error)
-    #    return False
+    except OwlReadyJavaError as error:
+        error_text = str(error)
+        st.error("Pellet returned a Java error during consistency checking.")
+
+        if "No such file or directory: 'java'" in error_text:
+            st.error(
+                "Java runtime was not found. Install Java (OpenJDK 11+), "
+                "ensure `java` is in PATH, and restart Streamlit."
+            )
+        elif "UnsupportedClassVersionError" in error_text:
+            st.error(
+                "Java/JAR version mismatch detected while running Pellet. "
+                "Use a compatible Owlready2 version or update Java runtime."
+            )
+        else:
+            st.error("Pellet failed with a Java runtime error. Check logs for details.")
+
+        st.exception(error)
+        return False
 
     except Exception as error:
         st.error(f"Error while running DL consistency checking: {error}")

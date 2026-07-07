@@ -47,9 +47,10 @@ def render_tab_inference():
         width="stretch"
     ):
         with st.spinner("Checking logical consistency..."):
-            check_DL_consistency()
-            st.session_state.consistent_kb = True
-            st.success("Logical consistency checked successfully!")
+            is_consistent = check_DL_consistency()
+            if is_consistent:
+                st.session_state.consistent_kb = True
+                st.success("Logical consistency checked successfully!")
 
     if st.session_state.get("consistent_kb", False):
         st.info("DL consistent KB is currently loaded.")

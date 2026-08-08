@@ -1,7 +1,5 @@
 owlready2==0.48
 owlrl
-pyshacl
-pytest
 rdflib
 streamlit
 streamlit-mermaid

@@ -28,8 +28,7 @@ DefendGraph/
 
 # Selos Considerados
 
-Os autores indicam os seguintes selos a serem considerados: Disponíveis, Funcionais e Sustentáveis. 
-Em relação ao selo Experimento Reprodutível, entende-se que este não se aplica à proposta, por definição e conceito deste selo.
+Os autores indicam os seguintes selos a serem considerados: Disponíveis, Funcionais, Sustentáveis e Experimento Reprodutível. 
 
 # Informações básicas
 O DefendGraph consiste em um protótipo de sistema especialista semântico que recebe como entrada um alerta nativo do Wazuh e produz como saída recomendações de mecanismos defensivos. Essas recomendações são apresentadas ao usuário em dois formatos complementares: texto estruturado e um grafo esquemático que representa o encadeamento semântico da recomendação.

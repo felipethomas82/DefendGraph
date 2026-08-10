@@ -112,13 +112,18 @@ A interface será aberta no navegador padrão em http://localhost:8501.
 
 Carregar um alerta de exemplo
 
-Na interface, utilize a guia de **Alert Ingestion** para carregar um dos arquivos de exemplo disponíveis em:
+Na interface, utilize a guia do **Stage 1** em **Step 1.1: Load Wazuh alert (JSON)** para carregar um dos arquivos de exemplo disponíveis em:
 
 ```
 data/samples wazuh alerts/alert_wazuh_example.json
 data/samples wazuh alerts/alert_wazuh_sql_injection_example.json
 ```
 
+Na guia do **Stage 2** em **Step 2.1: TBox File Resource Verification** para carregar um dos arquivos de exemplo disponíveis em:
+
+```
+data/mitre d3fend ontology/d3fend.owl
+```
 Siga os **Steps** e **Stages** do **Pipeline**. O **Pipeline** de processamento está dividido em quatro estágios principais, acessíveis por meio de uma interface desenvolvida em **Streamlit**:
 
 | Stage | Description |
@@ -129,6 +134,22 @@ Siga os **Steps** e **Stages** do **Pipeline**. O **Pipeline** de processamento 
 | **4. Competency Question-Based Explainability** | Resolution of predefined competency questions via SPARQL and synthesis of a defensive advisory with a reasoning graph. |
 
 Maiores informações sobre cada **Stages**/**Steps** estão disponíveis em [Arquitetura do DefendGraph](Arquitetura%20do%20DefendGraph.pdf)
+
+A execução das etapas do processo é parametrizada, sempre que viável, por meio de arquivos de configuração independentes. Os arquivos de configuração encontram-se em:
+
+```
+data/templates
+```
+Cada passo da arquitetura opera com entradas e saídas materializadas em formatos de arquivo padronizados. A geração  desses arquivos a cada transição de estado não apenas modulariza o sistema, como também viabiliza a auditoria completa de todo o ciclo de inferência. Estes arquivos encontram-se em:
+
+```
+state/
+```
+Maiores informações sobre esses arquivos encontram-se em:
+
+```
+pipeline_config.py
+```
 
 ## License
 

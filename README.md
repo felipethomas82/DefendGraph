@@ -119,7 +119,7 @@ data/samples wazuh alerts/alert_wazuh_example.json
 data/samples wazuh alerts/alert_wazuh_sql_injection_example.json
 ```
 
-Na guia do **Stage 2** em **Step 2.1: TBox File Resource Verification** para carregar um dos arquivos de exemplo disponíveis em:
+Na guia do **Stage 2** em **Step 2.1: TBox File Resource Verification** para carregar a ontologia MITRE D3FEND em:
 
 ```
 data/mitre d3fend ontology/d3fend.owl

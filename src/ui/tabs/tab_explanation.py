@@ -42,14 +42,21 @@ def render_tab_explanation():
     if is_step_completed(step):
         st.session_state.competency_question_resulted = True
 
-    # Extract inferential path
-    if st.session_state.get("competency_question_resulted", False) == False:
-        competency_question_button = True
-    else:
-        competency_question_button = False
-    
+    # Get Competency Questions
+    competency_question_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and st.session_state.get("annotation_loaded", False) #Step 2.2
+        and st.session_state.get("full_graph_loaded", False) #Step 2.3
+        and st.session_state.get("subgraph_loaded", False) #Step 2.4
+        and st.session_state.get("consistent_kb", False) #Step 3.1 
+        and st.session_state.get("materialized_kb", False) #Step 3.2
+        and not st.session_state.get("competency_question_resulted", False) #Step 4.1 - actual
+    )
+
     if st.button("Get competency question answer",
-        disabled=not competency_question_button,
+        disabled=not competency_question_button_enabled,
         width="stretch"
     ):
         with st.spinner("Getting results competency question..."):
@@ -83,14 +90,22 @@ def render_tab_explanation():
     if is_step_completed(step):
         st.session_state.markdown_file_generated = True
 
-    # Extract inferential path
-    if st.session_state.get("markdown_file_generated", False) == False:
-        markdown_button = True
-    else:
-        markdown_button = False
-    
+    # Create Defensive Advisory Markdown
+    markdown_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and st.session_state.get("annotation_loaded", False) #Step 2.2
+        and st.session_state.get("full_graph_loaded", False) #Step 2.3
+        and st.session_state.get("subgraph_loaded", False) #Step 2.4
+        and st.session_state.get("consistent_kb", False) #Step 3.1 
+        and st.session_state.get("materialized_kb", False) #Step 3.2
+        and st.session_state.get("competency_question_resulted", False) #Step 4.1
+        and not st.session_state.get("markdown_file_generated", False) #Step 4.2 - actual
+    )
+
     if st.button("Generate markdown .md file",
-        disabled=not markdown_button,
+        disabled=not markdown_button_enabled,
         width="stretch"
     ):
         with st.spinner("Generating markdown .md file..."):
@@ -129,14 +144,23 @@ def render_tab_explanation():
     if is_step_completed(step):
         st.session_state.path_graph_created = True
 
-    # Extract inferential path
-    if st.session_state.get("path_graph_created", False) == False:
-        path_graph_button = True
-    else:
-        path_graph_button = False
+    # Create Reasoning Path
+    path_graph_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and st.session_state.get("annotation_loaded", False) #Step 2.2
+        and st.session_state.get("full_graph_loaded", False) #Step 2.3
+        and st.session_state.get("subgraph_loaded", False) #Step 2.4
+        and st.session_state.get("consistent_kb", False) #Step 3.1 
+        and st.session_state.get("materialized_kb", False) #Step 3.2
+        and st.session_state.get("competency_question_resulted", False) #Step 4.1
+        and st.session_state.get("markdown_file_generated", False) #Step 4.2
+        and not st.session_state.get("path_graph_created", False) #Step 4.3 - Actual
+    )
 
     if st.button("Create path visualization",
-        disabled=not path_graph_button,
+        disabled=not path_graph_button_enabled,
         width="stretch"
     ):
         with st.spinner("Creating path visualization..."):

@@ -84,13 +84,15 @@ def render_tab_d3fend():
         st.session_state.annotation_loaded = True
 
     # Create Annotated rdf
-    if st.session_state.get("kb_loaded", False) == True and st.session_state.get("annotation_loaded", False) == False:
-        create_annotated_rdf_button_condition = True
-    else:
-        create_annotated_rdf_button_condition = False
-    
+    create_annotated_rdf_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and not st.session_state.get("annotation_loaded", False) #Step 2.2 - actual
+    )
+
     if st.button("Create Annotated RDF",
-        disabled=not create_annotated_rdf_button_condition,
+        disabled=not create_annotated_rdf_button_enabled,
         width="stretch"
     ):
         with st.spinner("Creating Annotated RDF file using RDFlib..."):
@@ -120,14 +122,17 @@ def render_tab_d3fend():
     if is_step_completed(step):
         st.session_state.full_graph_loaded = True
 
-    # Create Annotated rdf
-    if st.session_state.get("annotation_loaded", False) == True and st.session_state.get("full_graph_loaded", False) == False:
-        create_full_knowledge_graph_button_condition = True
-    else:
-        create_full_knowledge_graph_button_condition = False
+    # Instantiation to TBox
+    create_full_knowledge_graph_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and st.session_state.get("annotation_loaded", False) #Step 2.2
+        and not st.session_state.get("full_graph_loaded", False) #Step 2.3 - actual
+    )
 
     if st.button("Create full knowledge graph (D3fend + Annotated Alert RDF)",
-        disabled=not create_full_knowledge_graph_button_condition,
+        disabled=not create_full_knowledge_graph_button_enabled,
         width="stretch"
     ):
         with st.spinner("Creating full knowledge graph..."):
@@ -165,14 +170,17 @@ def render_tab_d3fend():
         st.session_state.subgraph_loaded = True
 
     # Create subgraph
-    if st.session_state.get("full_graph_loaded", False) == True and st.session_state.get("subgraph_loaded", False) == False:
-        create_subgraph_button_condition = True     
-    else:
-        create_subgraph_button_condition = False
-
+    create_subgraph_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and st.session_state.get("annotation_loaded", False) #Step 2.2
+        and st.session_state.get("full_graph_loaded", False) #Step 2.3
+        and not st.session_state.get("subgraph_loaded", False) #Step 2.4 - actual
+    )
 
     if st.button("Create Knowledge Base subgraph",
-        disabled=not create_subgraph_button_condition,
+        disabled=not create_subgraph_button_enabled,
         width="stretch"
     ):
         with st.spinner("Creating subgraph..."):

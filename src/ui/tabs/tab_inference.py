@@ -37,13 +37,18 @@ def render_tab_inference():
         st.session_state.consistent_kb = True
 
     # Check logical consistency
-    if st.session_state.get("consistent_kb", False) == False:
-        check_dl_consistency_button = True
-    else:
-        check_dl_consistency_button = False
-    
+    check_dl_consistency_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and st.session_state.get("annotation_loaded", False) #Step 2.2
+        and st.session_state.get("full_graph_loaded", False) #Step 2.3
+        and st.session_state.get("subgraph_loaded", False) #Step 2.4
+        and not st.session_state.get("consistent_kb", False) #Step 3.1 - actual
+    )
+
     if st.button("Check Logical Consistency",
-        disabled=not check_dl_consistency_button,
+        disabled=not check_dl_consistency_button_enabled,
         width="stretch"
     ):
         with st.spinner("Checking logical consistency..."):
@@ -74,14 +79,20 @@ def render_tab_inference():
     if is_step_completed(step):
         st.session_state.materialized_kb = True
 
-    # Check logical consistency
-    if st.session_state.get("materialized_kb", False) == False:
-        check_materialization_button = True
-    else:
-        check_materialization_button = False
-    
+    # Semantic Assertion Materialization
+    check_materialization_button_enabled = (
+        st.session_state.get("parsed_alert", False) #Step 1.1
+        and st.session_state.get("rdf_converted", False) #Step 1.2
+        and st.session_state.get("kb_loaded", False) #Step 2.1
+        and st.session_state.get("annotation_loaded", False) #Step 2.2
+        and st.session_state.get("full_graph_loaded", False) #Step 2.3
+        and st.session_state.get("subgraph_loaded", False) #Step 2.4
+        and st.session_state.get("consistent_kb", False) #Step 3.1 
+        and not st.session_state.get("materialized_kb", False) #Step 3.2 - actual
+    )
+
     if st.button("Create Materialized KB",
-        disabled=not check_materialization_button,
+        disabled=not check_materialization_button_enabled,
         width="stretch"
     ):
         with st.spinner("Creating materialized KB..."):

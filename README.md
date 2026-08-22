@@ -167,6 +167,21 @@ Maiores informações sobre esses arquivos encontram-se em:
 pipeline_config.py
 ```
 
+## Nota explicativa sobre os métodos do Step 2.4 - Create modular Knowledge Base (Subgraph Extraction)
+
+O **Step 2.4** provê uma camada de filtragem algorítmica sobre a base de conhecimento unificada e ainda não raciocinada, construída no **Step 2.3**, com o objetivo de extrair um subgrafo conforme os parâmetros definidos em data/template/modular_knowledge_graph_methods.json.
+
+Três métodos estão disponíveis:
+
+**Syntactic Graph Traversal**: realiza a extração estrutural a partir do nó inicial do alerta, percorrendo as conexões do grafo RDF até uma profundidade configurável.
+**Ontology Slicing**: realiza uma extração orientada à ontologia, selecionando recursos da D3FEND e suas relações e hierarquias associadas a um nó de partida.
+**Full Global Baseline**: não aplica filtragem ou modularização, preservando integralmente a base de conhecimento global.
+
+Nesta versão, os testes e resultados avaliados restringem-se ao método **Full Global Baseline**. Os demais métodos estão implementados e funcionais, porém seus parâmetros (como por exemplo o número máximo de saltos de travessia a partir do nó inicial) não foram avaliados exaustivamente. Seus efeitos sobre o subgrafo gerado e sobre eventuais ajustes necessários nas consultas SPARQL serão objeto de trabalhos futuros.
+
+Recomenda-se o uso do método **Full Global Baseline** no **Step 2.4**, exceto quando o objetivo for especificamente investigar os métodos de modularização e seus parâmetros.
+
+
 ## License
 
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.

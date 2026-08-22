@@ -36,6 +36,8 @@ def render_tab_d3fend():
     step = "2.1"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) #not used in this step, but kept for consistency with other steps
 
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
@@ -78,7 +80,9 @@ def render_tab_d3fend():
     step = "2.2"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
-    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) 
+
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
         st.session_state.annotation_loaded = True
@@ -96,7 +100,7 @@ def render_tab_d3fend():
         width="stretch"
     ):
         with st.spinner("Creating Annotated RDF file using RDFlib..."):
-            create_annotated_rdf()
+            create_annotated_rdf(template_path)
         st.session_state.annotation_loaded = True
         st.success("Annotated RDF file created successfully!")
 
@@ -117,6 +121,8 @@ def render_tab_d3fend():
     step = "2.3"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) #not used in this step, but kept for consistency with other steps
 
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
@@ -157,9 +163,10 @@ def render_tab_d3fend():
     step = "2.4"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename)
 
     #Render selected method and its fields
-    template_path = Path("data/templates/modular_knowledge_graph_methods.json")
     with template_path.open("r", encoding="utf-8") as file:
         methods_template = json.load(file)
 
@@ -187,13 +194,13 @@ def render_tab_d3fend():
             selected_method = methods_template["selected_method"]
 
             if selected_method == "method_1_syntactic_graph_traversal":
-                success = create_syntactic_graph_traversal_subgraph()
+                success = create_syntactic_graph_traversal_subgraph(template_path)
 
             elif selected_method == "method_2_ontology_slicing":
-                success = create_ontology_slicing_subgraph()
+                success = create_ontology_slicing_subgraph(template_path)
 
             elif selected_method == "method_3_full_global_baseline":
-                success = create_full_global_baseline_subgraph()
+                success = create_full_global_baseline_subgraph(template_path)
 
             else:
                 st.error(f"Unknown selected method: {selected_method}")

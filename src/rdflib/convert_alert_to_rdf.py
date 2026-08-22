@@ -10,9 +10,6 @@ from rdflib.namespace import XSD
 from src.state import get_step_state_filename_fullpath, load_json_from_file
 
 
-RDF_TEMPLATE_PATH = Path("data/templates/parsed_fields_to_unannotated_rdf.json")
-
-
 def is_empty_value(value: Any) -> bool:
     """
     Check whether a value should be ignored when creating RDF triples.
@@ -74,7 +71,7 @@ def add_literal(
     graph.add((subject, predicate, Literal(value, datatype=datatype)))
 
 
-def load_rdf_template(template_path: Path = RDF_TEMPLATE_PATH) -> dict[str, Any]:
+def load_rdf_template(template_path: Path) -> dict[str, Any]:
     """
     Load the RDF mapping template from disk.
     """
@@ -171,13 +168,13 @@ def add_parsed_fields_to_graph(
             )
 
 
-def convert_parsed_alert_to_rdf() -> bool:
+def convert_parsed_alert_to_rdf(template_path: Path) -> bool:
     """
     Convert the saved parsed alert JSON to an RDF/XML file using an RDF mapping template.
 
     Input:
         Parsed alert JSON from step 1.1.
-        RDF mapping template from data/templates/parsed_fields_to_unannotated_rdf.json.
+        RDF mapping template from data/templates/parsed_fields_to_unannotated_rdf.json (template Step 2.2.)
 
     Output:
         RDF/XML file for step 1.2.
@@ -203,7 +200,7 @@ def convert_parsed_alert_to_rdf() -> bool:
             st.error("Parsed alert JSON is empty or could not be loaded.")
             return False
 
-        rdf_template = load_rdf_template()
+        rdf_template = load_rdf_template(template_path)
         namespaces = build_namespaces(rdf_template)
 
         output_file_path.parent.mkdir(parents=True, exist_ok=True)

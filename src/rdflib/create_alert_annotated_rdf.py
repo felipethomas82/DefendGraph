@@ -10,9 +10,7 @@ from src.state import get_step_state_filename_fullpath
 from src.rdflib.d3fend_annotation_lookup import load_ontology_graph
 
 
-ANNOTATION_TEMPLATE_PATH = Path(
-    "data/templates/unannotated_rdf_to_semantically_annotated_rdf.json"
-)
+#ANNOTATION_TEMPLATE_PATH = Path("data/templates/unannotated_rdf_to_semantically_annotated_rdf.json")
 
 
 def is_empty_value(value: Any) -> bool:
@@ -227,7 +225,7 @@ def add_d3fend_resources_by_label(
     return added_triples_count
 
 
-def create_annotated_rdf() -> bool:
+def create_annotated_rdf(template_path: Path) -> bool:
     """
     Create an annotated RDF/OWL alert file.
 
@@ -260,7 +258,7 @@ def create_annotated_rdf() -> bool:
             st.error(f"D3FEND ontology file not found: {input_d3fend_file_path}")
             return False
 
-        annotation_template = load_json_template(ANNOTATION_TEMPLATE_PATH)
+        annotation_template = load_json_template(template_path)
         namespaces = build_namespaces(annotation_template)
 
         alert_graph = Graph()

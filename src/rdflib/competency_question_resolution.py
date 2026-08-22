@@ -6,7 +6,7 @@ from rdflib import Graph
 
 from src.state import get_step_state_filename_fullpath, get_step_state_filename
 
-def resolve_competency_questions() -> bool:
+def resolve_competency_questions(template_path: Path) -> bool:
     """
     Executes enabled competency questions over the materialized knowledge base.
 
@@ -22,15 +22,6 @@ def resolve_competency_questions() -> bool:
         True if the result artifact was generated successfully.
         False otherwise.
     """
-
-
-    template_path = Path("data/templates/competency_questions_template.json")
-
-    #state_dir = Path("state")
-    #source_kb_filename = "tag_3_2_materialized_kb.owl"
-    #output_filename = "tag_4_1_competency_question_results.json"
-    #source_kb_path = state_dir / source_kb_filename
-    #output_path = state_dir / output_filename
 
     input_step_id = "3.2"
     output_step_id = "4.1"

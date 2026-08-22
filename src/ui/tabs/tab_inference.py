@@ -8,7 +8,6 @@ from src.ui.tabs.tab_helper import render_tab_checklist
 from src.state import is_step_completed, get_step_state_filename_fullpath, delete_file_if_exists
 from src.owl2ready.check_DL_consistency import check_DL_consistency
 from src.owl2ready.create_materialized_kb import materialize_owlrl_assertions
-from src.owl2ready.stat_inspection_materialized_kb import inspect_materialized_kb_enabled_only
 
 def render_tab_inference():
     """
@@ -31,7 +30,9 @@ def render_tab_inference():
     step = "3.1"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
-    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) #not used in this step, but kept for consistency with other steps 
+
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
         st.session_state.consistent_kb = True
@@ -74,7 +75,9 @@ def render_tab_inference():
     step = "3.2"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
-    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) #not used in this step, but kept for consistency with other steps
+
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
         st.session_state.materialized_kb = True
@@ -102,17 +105,7 @@ def render_tab_inference():
 
     if st.session_state.get("materialized_kb", False):
         st.info("Materialized KB is currently loaded.")
-        
-    #if st.button("Get statistics from materialized KB",
-    #    disabled=not st.session_state.get("materialized_kb", False),
-    #    width="stretch"
-    #):
-    #    with st.spinner("Getting statistics from materialized KB..."):
-    #        inspection_result = inspect_materialized_kb_enabled_only()
-    #        if inspection_result:
-    #            render_materialized_kb_inspection(inspection_result)
-    #            st.success("Statistics retrieved successfully!")        
-        
+                
     # Clear button
     if st.button("Clear Materialized KB",
         disabled=not st.session_state.get("materialized_kb", False),
@@ -123,11 +116,6 @@ def render_tab_inference():
 
     st.divider()
     ######################################################
-
-
-
-
-
 
     # Render checklist container after running validation logic
     with checklist_placeholder.container():

@@ -7,11 +7,6 @@ import streamlit as st
 
 from src.state import get_step_state_filename_fullpath
 
-
-SUBGRAPH_TEMPLATE_PATH = Path(
-    "data/templates/modular_knowledge_graph_methods.json"
-)
-
 METHOD_ID = "method_3_full_global_baseline"
 
 
@@ -33,7 +28,7 @@ def get_config_value(method_config: dict[str, Any], field_name: str) -> Any:
     return method_config["config"][field_name]["value"]
 
 
-def create_full_global_baseline_subgraph() -> bool:
+def create_full_global_baseline_subgraph(template_path: Path) -> bool:
     """
     Create Step 2.4 output using Method 3: Full Global Baseline.
 
@@ -55,7 +50,7 @@ def create_full_global_baseline_subgraph() -> bool:
             st.error(f"Full knowledge graph file not found: {input_file_path}")
             return False
 
-        template = load_json_template(SUBGRAPH_TEMPLATE_PATH)
+        template = load_json_template(template_path)
         methods = template.get("methods", {})
 
         if METHOD_ID not in methods:

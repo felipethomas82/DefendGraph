@@ -33,6 +33,8 @@ def render_tab_alert():
     step = "1.1"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename)
 
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
@@ -54,7 +56,6 @@ def render_tab_alert():
         try:
             uploaded_json = json.load(uploaded_file)
 
-            template_path = Path("data/templates/alert_fields_to_parse.json")
             with template_path.open("r", encoding="utf-8") as file:
                 parse_template = json.load(file)
             
@@ -104,7 +105,7 @@ def render_tab_alert():
 
     if json_loaded and parsed_alert is not None:
         st.info("A parsed alert is currently loaded.")
-        template_path = Path("data/templates/alert_fields_to_parse.json")
+
         with template_path.open("r", encoding="utf-8") as file:
             parse_template = json.load(file)
         render_parsed_alert_fields(parsed_alert, parse_template)
@@ -119,6 +120,8 @@ def render_tab_alert():
     step = "1.2"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename)
 
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
@@ -129,7 +132,7 @@ def render_tab_alert():
     disabled=not st.session_state.get("json_loaded", False),
     width="stretch"
     ):
-        rdf_convert_success = convert_parsed_alert_to_rdf()
+        rdf_convert_success = convert_parsed_alert_to_rdf(template_path)
 
         if rdf_convert_success:
             st.success("Parsed alert converted to RDF/XML successfully.")

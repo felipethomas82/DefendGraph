@@ -20,12 +20,14 @@ PIPELINE = {
                 "file": "tag_1_1_parsed_wazuh_alert.json",
                 "type": "json",
                 "help":  "Carregue ...",
+                "template": "data/templates/alert_fields_to_parse.json"
             },
             "1.2": {
                 "name": "Convert parsed alert to RDF",
                 "file": "tag_1_2_parsed_wazuh_alert_as_rdf.rdf",
                 "type": "rdf",
-                "help": "Extrai ..."
+                "help": "Extrai ...",
+                "template": "data/templates/parsed_fields_to_unannotated_rdf.json"
             }
         }
     },
@@ -39,25 +41,29 @@ PIPELINE = {
                 "name": "TBox File Resource Verification",
                 "file": "tag_2_1_d3fend.owl",
                 "type": "owl",
-                "help": "A check to validate the existence, accessibility, and structural integrity of the static reference ontology (MITRE D3FEND) file."
+                "help": "A check to validate the existence, accessibility, and structural integrity of the static reference ontology (MITRE D3FEND) file.",
+                "template": ""
             },
             "2.2": {
                 "name": "Alert Semantic Annotation",
                 "file": "tag_2_2_rdf_wazuh_alert_with_semantic_annotation.owl",
                 "type": "owl",
-                "help": "The standalone process of transforming raw security alert data into structured RDF assertions (ABox), utilizing predefined domain namespaces to ensure ontological compatibility."
+                "help": "The standalone process of transforming raw security alert data into structured RDF assertions (ABox), utilizing predefined domain namespaces to ensure ontological compatibility.",
+                "template": "data/templates/unannotated_rdf_to_semantically_annotated_rdf.json"
             },
             "2.3": {
                 "name": "ABox (alert) Instantiation to TBox (D3FEND)",
                 "file": "tag_2_3_full_knowledge_graph.owl",
                 "type": "owl",
-                "help": "The integration phase where the standalone ABox assertions (the alert event) are logically bound to the TBox, followed by the serialization of the unified graph into a formal .owl file"
+                "help": "The integration phase where the standalone ABox assertions (the alert event) are logically bound to the TBox, followed by the serialization of the unified graph into a formal .owl file",
+                "template": ""
             },
             "2.4": {
                 "name": "Create modular Knowledge Base (Subgraph Extraction)",
                 "file": "tag_2_4_modular_knowledge_graph.owl",
                 "type": "owl",
-                "help": "An algorithmic filtering layer that processes the unified, unreasoned knowledge base to extract a localized semantic subgraph based on predefined configuration parameters."
+                "help": "An algorithmic filtering layer that processes the unified, unreasoned knowledge base to extract a localized semantic subgraph based on predefined configuration parameters.",
+                "template": "data/templates/modular_knowledge_graph_methods.json"
             }
         }
     },
@@ -71,13 +77,15 @@ PIPELINE = {
                 "name": "Logical Consistency Checking",
                 "file": "tag_3_1_dl_consistent_kb.owl",
                 "type": "owl",
-                "help": "Runs the Pellet DL reasoner over the knowledge base generated to verify whether the ontology is logically consistent. If no inconsistency is detected, this step stores a copy of the knowledge base as the validated consistent KB."
+                "help": "Runs the Pellet DL reasoner over the knowledge base generated to verify whether the ontology is logically consistent. If no inconsistency is detected, this step stores a copy of the knowledge base as the validated consistent KB.",
+                "template": ""
             },
             "3.2": {
                 "name": "Semantic Assertion Materialization",
                 "file": "tag_3_2_materialized_kb.owl",
                 "type": "owl",
-                "help": "Runs the Pellet DL reasoner over the consistent knowledge base from Step 3.1 and saves the materialized ontology, including implicit class memberships and object property assertions inferred from the ontology axioms."
+                "help": "Runs the Pellet DL reasoner over the consistent knowledge base from Step 3.1 and saves the materialized ontology, including implicit class memberships and object property assertions inferred from the ontology axioms.",
+                "template": ""
             }
         }
     },
@@ -91,51 +99,23 @@ PIPELINE = {
                     "name": "Competency Question Resolution",
                     "file": "tag_4_1_competency_question_results.json",
                     "type": "json",
-                    "help": "Executes predefined SPARQL competency questions against the materialized knowledge base to retrieve alert context, semantic associations, reasoning paths, and candidate defensive artifacts."
+                    "help": "Executes predefined SPARQL competency questions against the materialized knowledge base to retrieve alert context, semantic associations, reasoning paths, and candidate defensive artifacts.",
+                    "template": "data/templates/competency_questions_template.json"
                 },
                 "4.2": {
                     "name": "Defensive Advisory Synthesis",
                     "file": "tag_4_2_defensive_advisory.md",
                     "type": "md",
-                    "help": "Transforms the competency question results into a structured defensive advisory, combining explanation, reasoning trace, supporting evidence, and recommended defensive actions."
+                    "help": "Transforms the competency question results into a structured defensive advisory, combining explanation, reasoning trace, supporting evidence, and recommended defensive actions.",
+                    "template": "data/templates/defensive_advisory_template.json"
                 },
                 "4.3": {
                     "name": "Reasoning Path Visualization",
                     "file": "tag_4_3_reasoning_path_graph.mmd",
                     "type": "mmd",
-                    "help": "Transforms selected competency question results into a directed Mermaid graph showing the path from alert evidence to semantic interpretation and defensive recommendation."
+                    "help": "Transforms selected competency question results into a directed Mermaid graph showing the path from alert evidence to semantic interpretation and defensive recommendation.",
+                    "template": ""
                 }
             }
         }
 }
-
-"""
-to be implemented 
-
-    "5": {
-        "name": "Human Validation and Knowledge Acquisition",
-        "caption": "Consolidate findings, capture expert validation, and drive ontology refinement.",
-        "help": "The human-centered layer of the expert system. It compiles an executive summary of the incident and collects analyst feedback to validate the machine reasoning process, capturing domain expertise for the continuous evolution of the knowledge base.",
-        "steps": {
-            "5.1": {
-                "name": "Executive Summary & Incident Dossier",
-                "file": "tag_5_1_executive_summary.md",
-                "type": "md",
-                "help": "Generates a concise, high-level summary of the alert, the semantic interpretation, and the inferred defenses. This step abstracts the logical complexity of SPARQL and description logic into a clean, auditable artifact ready for human review."
-            },
-            "5.2": {
-                "name": "Expert Validation & Knowledge Capture",
-                "file": "tag_5_2_expert_feedback.json",
-                "type": "json",
-                "help": "Captures the analyst's qualitative and quantitative assessment through an interactive form, recording validation scores, missing contextual data, and unmapped defensive measures."
-            },
-            "5.3": {
-                "name": "Knowledge Base Improvement Proposal",
-                "file": "tag_5_3_kb_evolution_proposal.md",
-                "type": "md",
-                "help": "Transforms the human feedback into a structured proposal, documenting required ontological changes, semantic misalignments, or new competency question mappings to be implemented by the knowledge engineer."
-            }
-        }
-    }
-
-"""

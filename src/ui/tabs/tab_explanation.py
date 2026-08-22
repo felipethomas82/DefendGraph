@@ -37,7 +37,9 @@ def render_tab_explanation():
     step = "4.1"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
-    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) 
+
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
         st.session_state.competency_question_resulted = True
@@ -60,7 +62,7 @@ def render_tab_explanation():
         width="stretch"
     ):
         with st.spinner("Getting results competency question..."):
-            success = resolve_competency_questions()
+            success = resolve_competency_questions(template_path)
             if success:
                 st.session_state.competency_question_resulted = True
                 st.success("Results competency question obtained successfully!")
@@ -85,7 +87,9 @@ def render_tab_explanation():
     step = "4.2"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
-    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) 
+
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
         st.session_state.markdown_file_generated = True
@@ -109,7 +113,7 @@ def render_tab_explanation():
         width="stretch"
     ):
         with st.spinner("Generating markdown .md file..."):
-            success = generate_md_file_defensive_advisory()
+            success = generate_md_file_defensive_advisory(template_path)
             if success:
                 st.session_state.markdown_file_generated = True
                 st.success("Markdown .md file generated successfully!")
@@ -139,7 +143,9 @@ def render_tab_explanation():
     step = "4.3"
     step_name = PIPELINE[stage]["steps"][step]["name"]
     st.subheader(f"Step {step}: {step_name}", help=PIPELINE[stage]["steps"][step]["help"])    
-    
+    template_filename = PIPELINE[stage]["steps"][step]["template"]
+    template_path = Path(template_filename) #not used in this step, but kept for consistency with other steps
+
     #Check if step is already completed based on file -> state
     if is_step_completed(step):
         st.session_state.path_graph_created = True

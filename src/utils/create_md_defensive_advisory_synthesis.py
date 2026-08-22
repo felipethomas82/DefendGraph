@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Set
 
 from src.state import get_step_state_filename_fullpath
 
-def generate_md_file_defensive_advisory() -> bool:
+def generate_md_file_defensive_advisory(template_path: Path) -> bool:
     """
     Generates the defensive advisory Markdown artifact.
 
@@ -20,17 +20,10 @@ def generate_md_file_defensive_advisory() -> bool:
         False otherwise.
     """
 
-    #state_dir = Path("state")
-    #cq_results_path = state_dir / "tag_4_1_competency_question_results.json"
-    #template_path = Path("data/templates/defensive_advisory_template.json")
-    #output_path = state_dir / "tag_4_2_defensive_advisory.md"
-
     input_step_id = "4.1"
     output_step_id = "4.2"
     cq_results_path = Path(get_step_state_filename_fullpath(input_step_id))
     output_path = Path(get_step_state_filename_fullpath(output_step_id))
-    template_path = Path("data/templates/defensive_advisory_template.json")
-
 
     try:
         if not cq_results_path.exists():

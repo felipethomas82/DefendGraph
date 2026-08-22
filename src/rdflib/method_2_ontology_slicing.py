@@ -8,11 +8,6 @@ from rdflib import Graph, URIRef
 
 from src.state import get_step_state_filename_fullpath
 
-
-SUBGRAPH_TEMPLATE_PATH = Path(
-    "data/templates/modular_knowledge_graph_methods.json"
-)
-
 METHOD_ID = "method_2_ontology_slicing"
 
 
@@ -314,7 +309,7 @@ def build_ontology_slicing_subgraph(
     return subgraph
 
 
-def create_ontology_slicing_subgraph() -> bool:
+def create_ontology_slicing_subgraph(template_path: Path) -> bool:
     """
     Create Step 2.4 modular knowledge graph using Method 2.
 
@@ -338,7 +333,7 @@ def create_ontology_slicing_subgraph() -> bool:
             st.error(f"Full knowledge graph file not found: {input_file_path}")
             return False
 
-        template = load_json_template(SUBGRAPH_TEMPLATE_PATH)
+        template = load_json_template(template_path)
         namespaces = template.get("namespaces", {})
         methods = template.get("methods", {})
 

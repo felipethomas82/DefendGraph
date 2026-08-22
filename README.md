@@ -173,8 +173,10 @@ O **Step 2.4** provê uma camada de filtragem algorítmica sobre a base de conhe
 
 Três métodos estão disponíveis:
 
-**Syntactic Graph Traversal**: realiza a extração estrutural a partir do nó inicial do alerta, percorrendo as conexões do grafo RDF até uma profundidade configurável.
-**Ontology Slicing**: realiza uma extração orientada à ontologia, selecionando recursos da D3FEND e suas relações e hierarquias associadas a um nó de partida.
+**Syntactic Graph Traversal**: realiza a extração estrutural a partir do nó inicial do alerta, percorrendo as conexões do grafo RDF até uma profundidade configurável;
+
+**Ontology Slicing**: realiza uma extração orientada à ontologia, selecionando recursos da D3FEND e suas relações e hierarquias associadas a um nó de partida;
+
 **Full Global Baseline**: não aplica filtragem ou modularização, preservando integralmente a base de conhecimento global.
 
 Nesta versão, os testes e resultados avaliados restringem-se ao método **Full Global Baseline**. Os demais métodos estão implementados e funcionais, porém seus parâmetros (como por exemplo o número máximo de saltos de travessia a partir do nó inicial) não foram avaliados exaustivamente. Seus efeitos sobre o subgrafo gerado e sobre eventuais ajustes necessários nas consultas SPARQL serão objeto de trabalhos futuros.

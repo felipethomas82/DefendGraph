@@ -70,6 +70,22 @@ Os autores não identificam riscos à segurança associados à execução do art
 
 # Instalação
 
+### Pré-requisito: Java Virtual Machine (JVM)
+
+O DefendGraph utiliza a biblioteca Owlready2 para executar o reasoner ontológico. Os reasoners utilizados pelo Owlready2, como Pellet, são implementados em Java e, portanto, requerem uma **Java Virtual Machine (JVM)** instalada e acessível no sistema.
+
+Recomenda-se verificar e, se necessário, instalar o Java antes de clonar o repositório e iniciar as demais etapas de instalação.
+
+Para verificar se o Java já está disponível, execute:
+
+```
+java -version
+```
+
+Caso o comando java não seja reconhecido, instale uma distribuição Java.
+
+A instalação de um JDK já inclui a JVM necessária para a execução do reasoner. Se o Java estiver instalado, mas o comando java não for encontrado, verifique se o diretório do Java está configurado na variável de ambiente PATH.
+
 ### 1. Clone o repositório
 
 ```bash
